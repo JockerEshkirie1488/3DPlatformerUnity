@@ -5,22 +5,32 @@ using UnityEditor.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private int health = 20;
+    private int health = 30;
     public int coins = 0;
     public string sceneName;
+    public Transform attackPoint;
+    public GameObject fireballPrefab;
+    public AudioSource audioSource;
+    public AudioClip damageSound;
 
     public void DamagePlayer(int damage)
     {
         health -= damage;
+
+        if (health <= 0)
+        {
+            EditorSceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
     }
     void Update()
     {
-        if (health <= 0 || coins >= 15)
+        if (Input.GetMouseButtonDown(0))
         {
-            health = 20;
-            coins = 0;
-            EditorSceneManager.LoadScene(sceneName);
+            Instantiate(fireballPrefab, attackPoint.position, attackPoint.rotation);
         }
-        
     }
 }
